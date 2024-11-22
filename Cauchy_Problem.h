@@ -19,7 +19,7 @@ public:
 		ERK4,
 		AdamsBashforth2,
 		AdamsBashforth3,
-		AdamsBashforth4
+		AdamsBashforth4,
 	};
 
 
@@ -33,7 +33,7 @@ public:
 	vector<Type> Adams_Bashforth_Scheme_Start(Difference_Scheme_Type FD_Type,
 		double Time_Begin,
 		double Time_End,
-		const vector<Type>& Initial_Conditions,
+		const vector<vector<double>>& Initial_Conditions,
 		const function<vector<Type>(const vector<Type>& U, const Point& P)>& F);
 
 	vector<Type> ERKs_Scheme_Start(Difference_Scheme_Type FD_Type,
@@ -42,6 +42,9 @@ public:
 		const vector<Type>& Initial_Conditions,
 		const function<vector<Type>(const vector<Type>& U, const Point& P)>& F);
 
+	vector<vector<Type>> RungeKutta_Start(double Time_Begin, double h, int steps,
+		const vector<Type>& Initial_Conditions,
+		const function<vector<Type>(const vector<double>& U, const Point& P)>& F);
 
 
 };
