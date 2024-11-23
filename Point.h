@@ -1,5 +1,6 @@
 #pragma once
 
+	//точка
 class Point{
 	private:
 		double X, Y, Z;
@@ -8,6 +9,6 @@ class Point{
 		double x()const;
 		double y()const;
 		double z()const;
-	};
+};
 
 
