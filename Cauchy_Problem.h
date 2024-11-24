@@ -17,10 +17,7 @@ public:
 		ERK1 = 1,
 		ERK2,
 		ERK4,
-		AdamsBashforth2,
-		AdamsBashforth3,
-		AdamsBashforth4,
-		AdamsMoulton3
+		Adams,
 	};
 
 
@@ -31,7 +28,7 @@ public:
 	// Initial_Conditions - начальные условия
 	// F - правая часть системы ДУ
 
-	vector<Type> Adams_Bashforth_Scheme_Start(Difference_Scheme_Type FD_Type,
+	vector<Type> Adams_Predictor_Corrector_Scheme(Difference_Scheme_Type FD_Type,
 		double Time_Begin,
 		double Time_End,
 		const vector<vector<double>>& Initial_Conditions,
