@@ -20,6 +20,7 @@ public:
 		AdamsBashforth2,
 		AdamsBashforth3,
 		AdamsBashforth4,
+		AdamsMoulton3
 	};
 
 

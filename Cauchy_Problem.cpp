@@ -95,7 +95,7 @@ using namespace std;
         for (int i = 0; i < Variable_Number; i++) {
             Solution[i] += h * adjustment2[i];
         }
-        
+
 		return Solution;
 	}
 
@@ -123,29 +123,54 @@ using namespace std;
         const function<vector<double>(const vector<double>& U, const Point& P)>& F) {
 
         int Variable_Number = 2;
-        double h = Time_End - Time_Begin;
+        double h = (Time_End - Time_Begin);
         vector<double> Next_Solution(Variable_Number);
         Point P(Time_Begin, 0, 0);
 
         if (FD_Type == Difference_Scheme_Type::AdamsBashforth2) {
             for (int i = 0; i < Variable_Number; ++i) {
                 
-                Next_Solution[i] = Initial_Conditions[0][i] + h * (3.0 / 2.0 * F(Initial_Conditions[0], P)[i] - 1.0 / 2.0 * F(Initial_Conditions[1], P)[i]);
+                Next_Solution[i] = Initial_Conditions[3][i] + h * (3.0 / 2.0 * F(Initial_Conditions[3], P)[i] - 1.0 / 2.0 * F(Initial_Conditions[2], P)[i]);
             }
         }
         else if (FD_Type == Difference_Scheme_Type::AdamsBashforth3) {
             for (int i = 0; i < Variable_Number; ++i) {
-                Next_Solution[i] = Initial_Conditions[0][i] + h * (23.0 / 12.0 * F(Initial_Conditions[0], P)[i] - 16.0 / 12.0 * F(Initial_Conditions[1], P)[i] + 5.0 / 12.0 * F(Initial_Conditions[2], P)[i]);
+                Next_Solution[i] = Initial_Conditions[3][i] + h * (23.0 / 12.0 * F(Initial_Conditions[3], P)[i] - 16.0 / 12.0 * F(Initial_Conditions[2], P)[i] + 5.0 / 12.0 * F(Initial_Conditions[1], P)[i]);
             }
         }
         else if (FD_Type == Difference_Scheme_Type::AdamsBashforth4) {
             for (int i = 0; i < Variable_Number; ++i) {
-                Next_Solution[i] = Initial_Conditions[0][i] + h * (55.0 / 24.0 * F(Initial_Conditions[0], P)[i] - 59.0 / 24.0 * F(Initial_Conditions[1], P)[i] + 37.0 / 24.0 * F(Initial_Conditions[2], P)[i] - 9.0 / 24.0 * F(Initial_Conditions[3], P)[i]);
+                Next_Solution[i] = Initial_Conditions[3][i] + h * (55.0 / 24.0 * F(Initial_Conditions[3], P)[i] - 59.0 / 24.0 * F(Initial_Conditions[2], P)[i] + 37.0 / 24.0 * F(Initial_Conditions[1], P)[i] - 9.0 / 24.0 * F(Initial_Conditions[0], P)[i]);
             }
         }
+        else if (FD_Type == Difference_Scheme_Type::AdamsMoulton3) {
+            // Итеративное решение для неявной схемы Адамса-Мултона 3
+            const int max_iterations = 10;
+            const double tolerance = 1e-6;
 
+            vector<double> Previous_Solution = Initial_Conditions[2];
+            vector<double> Current_Solution = Initial_Conditions[3];
+
+            for (int iter = 0; iter < max_iterations; ++iter) {
+                Point P_next(Time_Begin + h, 0, 0);
+
+                for (int i = 0; i < Variable_Number; ++i) {
+                    Current_Solution[i] = Initial_Conditions[3][i] +h / 12.0 * (5.0 * F(Current_Solution, P_next)[i] +8.0 * F(Initial_Conditions[3], P)[i] -F(Initial_Conditions[2], P)[i]);
+                }
+
+                double error = 0.0;
+                for (int i = 0; i < Variable_Number; ++i) {
+                    error += abs(Current_Solution[i] - Previous_Solution[i]);
+                }
+                if (error < tolerance) {
+                    break;
+                }
+
+                Previous_Solution = Current_Solution;
+            }
+            Next_Solution = Current_Solution;
+        }
 
         return Next_Solution;
     }
-
 
